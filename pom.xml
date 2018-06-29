@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.wacai.ocean</groupId>
+  <artifactId>baige</artifactId>
+  <version>1.1.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>baige</name>
+
+
+
+  <parent>
+    <groupId>com.wacai</groupId>
+    <artifactId>wacai-boot-starter-parent</artifactId>
+    <version>1.1.2</version>
+  </parent>
+
+
+
+  <properties>
+    <slf4j.api.version>1.7.25</slf4j.api.version>
+    <fastjson.version>1.2.40</fastjson.version>
+    <netty.version>4.1.17.Final</netty.version>
+    <logback.classic.version>1.1.11</logback.classic.version>
+    <logback.core.version>1.1.11</logback.core.version>
+    <websocket.client.version>9.4.7.v20170914</websocket.client.version>
+    <open.allinone.sdk.version>1.2.2</open.allinone.sdk.version>
+    <open.token.api.version>1.0.3</open.token.api.version>
+    <lombok.version>1.16.14</lombok.version>
+    <!--<dubbo.verison>3.1.1</dubbo.verison>-->
+    <!--<zookeeper.version>3.4.6</zookeeper.version>-->
+    <!--<zkclient.version>0.10</zkclient.version>-->
+    <!--<ninja.client.version>1.1.1</ninja.client.version>-->
+
+    <kafka.client.version>1.2.1</kafka.client.version>
+    <palamidi.meta.client.version>1.1.2-SNAPSHOT</palamidi.meta.client.version>
+    <palamidi.cache.version>1.1.1-SNAPSHOT</palamidi.cache.version>
+    <!-- 推荐使用2.1.2, 除非存在netty高版本冲突问题, 才考虑使用3.0.0 -->
+    <lightning.version>3.0.0</lightning.version>
+  </properties>
+
+
+  <modules>
+    <module>baige-sdk</module>
+    <module>baige-remoting</module>
+    <module>baige-common</module>
+    <module>baige-sdk-example</module>
+  </modules>
+
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.classic.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-core</artifactId>
+        <version>${logback.core.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>${fastjson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-all</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-client</artifactId>
+        <version>${websocket.client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.wacai</groupId>
+        <artifactId>wacai-openAllInOne-sdk</artifactId>
+        <version>${open.allinone.sdk.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.wacai.middleware</groupId>
+        <artifactId>open-token-api</artifactId>
+        <version>${open.token.api.version}</version>
+      </dependency>
+      <!--<dependency>-->
+      <!--<groupId>com.alibaba</groupId>-->
+      <!--<artifactId>dubbo</artifactId>-->
+      <!--<version>${dubbo.verison}</version>-->
+      <!--<exclusions>-->
+      <!--<exclusion>-->
+      <!--<groupId>org.springframework</groupId>-->
+      <!--<artifactId>spring</artifactId>-->
+      <!--</exclusion>-->
+      <!--<exclusion>-->
+      <!--<groupId>log4j</groupId>-->
+      <!--<artifactId>log4j</artifactId>-->
+      <!--</exclusion>-->
+      <!--</exclusions>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+      <!--<groupId>org.apache.zookeeper</groupId>-->
+      <!--<artifactId>zookeeper</artifactId>-->
+      <!--<version>${zookeeper.version}</version>-->
+      <!--<exclusions>-->
+      <!--<exclusion>-->
+      <!--<groupId>org.slf4j</groupId>-->
+      <!--<artifactId>slf4j-log4j12</artifactId>-->
+      <!--</exclusion>-->
+      <!--<exclusion>-->
+      <!--<groupId>log4j</groupId>-->
+      <!--<artifactId>log4j</artifactId>-->
+      <!--</exclusion>-->
+      <!--</exclusions>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+      <!--<groupId>com.101tec</groupId>-->
+      <!--<artifactId>zkclient</artifactId>-->
+      <!--<version>${zkclient.version}</version>-->
+      <!--<exclusions>-->
+      <!--<exclusion>-->
+      <!--<groupId>log4j</groupId>-->
+      <!--<artifactId>log4j</artifactId>-->
+      <!--</exclusion>-->
+      <!--<exclusion>-->
+      <!--<groupId>org.slf4j</groupId>-->
+      <!--<artifactId>slf4j-log4j12</artifactId>-->
+      <!--</exclusion>-->
+      <!--</exclusions>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+      <!--<groupId>com.wacai</groupId>-->
+      <!--<artifactId>ninja-client</artifactId>-->
+      <!--<version>${ninja.client.version}</version>-->
+      <!--</dependency>-->
+
+      <dependency>
+        <groupId>com.wacai</groupId>
+        <artifactId>kafka-http-client</artifactId>
+        <version>${kafka.client.version}</version>
+      </dependency>
+
+
+      <dependency>
+        <groupId>com.wacai.middleware</groupId>
+        <artifactId>palamidi-meta-client</artifactId>
+        <version>${palamidi.meta.client.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.wacai.middleware</groupId>
+        <artifactId>palamidi-cache</artifactId>
+        <version>${palamidi.cache.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.wacai.middleware</groupId>
+        <artifactId>lightning</artifactId>
+        <version>${lightning.version}</version>
+      </dependency>
+
+
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.10</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+
+  <distributionManagement>
+    <repository>
+      <id>deployment</id>
+      <name>internal repository for releases</name>
+      <url>http://repo.caimi-inc.com/nexus/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>deployment</id>
+      <name>internal repository for snapshots</name>
+      <url>http://repo.caimi-inc.com/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+
+</project>

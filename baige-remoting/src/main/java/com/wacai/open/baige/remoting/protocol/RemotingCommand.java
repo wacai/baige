@@ -379,11 +379,6 @@ public class RemotingCommand {
   }
 
 
-  /**
-   * 把RemotingCommand类中的extFields属性 解析成CommandCustomHeader 子类的属性。
-   * @param classHeader
-   * @return
-   */
   public CommandCustomHeader decodeCommandCustomHeader(Class<? extends CommandCustomHeader> classHeader)
       throws RemotingCommandException {
     CommandCustomHeader objectHeader;

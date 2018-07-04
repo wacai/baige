@@ -242,9 +242,9 @@ public class MQClientAPIImpl {
    * @param timeoutMills 拉消息超时时间
    * @param communicationMode 拉消息模式。
    * @param pullMsgCallback 拉消息回调函数。
-   * @return
-   * @throws RemotingException
-   * @throws InterruptedException
+   * @return PullResult PullResult
+   * @throws RemotingException RemotingException
+   * @throws InterruptedException  InterruptedException
    */
   public PullResult pullMessage(final String serverAddr, final PullMessageRequestHeader requestHeader, final long
       timeoutMills, final CommunicationMode communicationMode, final PullMsgCallback pullMsgCallback)

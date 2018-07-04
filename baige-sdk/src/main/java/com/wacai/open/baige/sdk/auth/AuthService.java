@@ -51,9 +51,9 @@ public class AuthService {
   /**
    * 等待认证结果
    * @param waitAuthResultTimeoutMs 等待认证结果的超时时间
-   * @return 认证结果
-   * @throws AuthException
-   * @throws InterruptedException
+   * @return AuthResult 认证结果
+   * @throws AuthException AuthException
+   * @throws InterruptedException InterruptedException
    */
   public AuthResult waitAuthResult(long waitAuthResultTimeoutMs)
       throws AuthException, InterruptedException {
@@ -79,7 +79,7 @@ public class AuthService {
 
   /**
    * 是否已经通过认证
-   * @return
+   * @return  是否已经通过认证
    */
   public boolean isAuthSuccess() {
     return this.isAuthSuccess;

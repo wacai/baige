@@ -44,8 +44,9 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
 
     /**
      * 在HTTP 升级成websocket之前被调用，如果返回AuthorizeData 非Null, 则通过授权认证；否则未通过授权
-     * @param fullHttpRequest
+     * @param fullHttpRequest 完整Http请求
      * @return 通过授权认证的信息
+     * @throws AuthorizeException  AuthorizeException
      */
     AuthorizeData authroize(FullHttpRequest fullHttpRequest)
         throws AuthorizeException;

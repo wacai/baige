@@ -352,7 +352,7 @@ public class WebSocketRemotingClient  extends NettyRemotingAbstract implements R
   }
 
   /**
-   * 注册server-> client  的请求处理器。
+   * 注册server发送给client的请求处理器。
    */
   @Override
   public void registerProcessor(short requestCode, NettyRequestProcessor processor,

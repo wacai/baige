@@ -159,10 +159,6 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
      this.invokeAysncImpl(channel, request, timeoutMillis, invokeCallback);
   }
 
-  /**
-   * 在子类中可以进行复写，请参考WebSocketRemotingServer}
-   * @return
-   */
   protected  ChannelInitializer<SocketChannel> createChannelInitializer(EventExecutorGroup group
    ,NettyRemotingServer nettyRemotingServer) {
     return new ChannelInitializer<SocketChannel>() {

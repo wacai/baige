@@ -17,9 +17,9 @@ public interface MQConsumer extends MQAdmin {
 
   /**
    *  多次注册相同topic的{@link MessageListener} , 以第一个为准。
-   * @param topic
-   * @param messageListener
-   * @return
+   * @param topic  消息主题
+   * @param messageListener 消息监听器
+   * @return MQConsumer MQConsumer
    */
   MQConsumer registerMessageListener(String topic, final MessageListener messageListener);
 

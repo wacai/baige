@@ -215,7 +215,9 @@ public class WsSocket {
 
   /***
    * 发送request 给对端服务器。
-   * @param remotingCommand
+   * @param remotingCommand 发送给服务器的command
+   * @return  Future  Future
+   * @throws  IOException IOException
    */
   public Future sendRemotingCommand(RemotingCommand remotingCommand) throws IOException {
     ByteBuffer byteBuffer = remotingCommand.encode();

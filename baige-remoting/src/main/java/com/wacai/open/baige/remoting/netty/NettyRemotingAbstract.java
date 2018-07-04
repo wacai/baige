@@ -148,8 +148,8 @@ public abstract  class NettyRemotingAbstract  {
 
   /**
    * 允许单向调用和异步调用的请求信号量。
-   * @param permitsOneway
-   * @param permitsAsync
+   * @param permitsOneway oneway调用的信号量值
+   * @param permitsAsync  async调用的信号量值
    */
   public NettyRemotingAbstract(final int permitsOneway, final int permitsAsync) {
     this.semaphoreOneway = new Semaphore(permitsOneway, true);

@@ -9,8 +9,8 @@ import java.util.List;
 
 /**
  * 负责BinaryWebSocketFrame 和 ByteBuf的编解码
- * decode:  BinaryWebSocketFrame -> ByteBuf
- * encode:  ByteBuf -> BinaryWebSocketFrame
+ * decode:  把BinaryWebSocketFrame 解码成 ByteBuf
+ * encode:  把ByteBuf 编码成 BinaryWebSocketFrame
  */
 public  class WebSocketFrameHandler extends MessageToMessageCodec<BinaryWebSocketFrame, ByteBuf> {
 

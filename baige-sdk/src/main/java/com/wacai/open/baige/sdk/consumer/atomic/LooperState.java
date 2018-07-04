@@ -7,11 +7,11 @@ package com.wacai.open.baige.sdk.consumer.atomic;
  *                 -----------------
  *                 |               |
  *                \|/              |    
- *      | ----> FETCHING  ---->  WAITING
+ *      | --- FETCHING  ----  WAITING
  *      |          |    \
  *      |          |     \--------------------|
  *      |         \|/                        \|/
- *      |      PROCESSING -------> ABORTED/SUSPENDED
+ *      |      PROCESSING ------- ABORTED/SUSPENDED
  *      |          |                          ^
  *      |          |    / --------------------|  
  *      |         \|/  /   
@@ -22,7 +22,7 @@ package com.wacai.open.baige.sdk.consumer.atomic;
  *      |       FINISHED
  *      |          |
  *      |          |
- *      -----<------
+ *      ----------
  * 
  * </pre>
  * 

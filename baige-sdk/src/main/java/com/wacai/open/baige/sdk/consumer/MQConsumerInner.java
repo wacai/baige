@@ -26,7 +26,7 @@ public interface MQConsumerInner {
    * @param consumerGroup 消费者分组
    * @param topic 消息主题
    * @param messageList 消息代理代为拉取到的消息列表
-   * @return
+   * @return  唤醒sdk恢复消息拉取是否成功
    */
   boolean resumePullMsg(String consumerGroup, String topic, List<Message> messageList);
 

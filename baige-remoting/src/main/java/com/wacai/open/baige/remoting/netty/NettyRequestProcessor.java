@@ -13,16 +13,16 @@ public interface NettyRequestProcessor<T> {
    * @param context 和request command处理相关的上下文
    * @param request request command .
    * @return  response command
-   * @throws Exception
+   * @throws Exception  Exception
    */
     RemotingCommand processRequest(T context,
       RemotingCommand request) throws  Exception;
 
   /**
    * 异步处理请求。
-   * @param context
-   * @param request
-   * @param asyncProcessCallback
+   * @param context  异步请求上下文
+   * @param request  请求Command
+   * @param asyncProcessCallback  AsyncProcessCallback
    */
     void asyncProcessRequest(T context, RemotingCommand request, AsyncProcessCallback asyncProcessCallback);
 

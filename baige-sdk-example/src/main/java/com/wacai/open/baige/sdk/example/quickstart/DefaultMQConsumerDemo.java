@@ -19,10 +19,11 @@ public class DefaultMQConsumerDemo {
     /*
       测试环境：
       */
-    String appKey = "mvkpfcb9uec7";
-    String appSecret = "71ba8b293c2c4e0ebdbf8ac361ee3d92";
+    String appKey = "7an6femkhkn7";
+    String appSecret = "4b1efc4586244c2abb886e8a3bce3bb4";
     String wsServerURL = "ws://open.wacaiyun.com/ws";
 
+//    String wsServerURL = "ws://localhost:8888/ws";
 
     //创建消息消费者
     DefaultMQConsumer defaultMQConsumer = new DefaultMQConsumer(
@@ -52,22 +53,6 @@ public class DefaultMQConsumerDemo {
      * 相同的topic重复调用，则以第一次为准；
      */
 
-    final AtomicInteger recvMsgCount = new AtomicInteger(0);
-    final int metricIntervalSeconds = 5;
-
-
-    ScheduledExecutorService scheduledExecutorService =   Executors
-        .newSingleThreadScheduledExecutor(new ThreadFactoryImpl(
-            "metricThread"));
-
-    scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        int count = recvMsgCount.getAndSet(0);
-        System.out.println("recv msg tps:" + count / metricIntervalSeconds);
-      }
-    }, 0, metricIntervalSeconds, TimeUnit.SECONDS);
-
 
     //middleware.guard.cache
     //loan.open.scene.approve.result.xhj
@@ -76,7 +61,6 @@ public class DefaultMQConsumerDemo {
       public ConsumeStatus consumeMessages(Message message) {
            /*消息处理逻辑，不要在这里进行阻塞操作； */
         System.out.println("recv msg:{}" + new String(message.getPayload()));
-        recvMsgCount.addAndGet(1);
         return ConsumeStatus.SUCCESS;
       }
     });

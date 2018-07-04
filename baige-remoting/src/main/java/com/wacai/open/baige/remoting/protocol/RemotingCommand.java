@@ -96,7 +96,7 @@ public class RemotingCommand {
   private short respCode;
 
   /*请求发起方在同一连接上的不同请求标志代码，多线程连接复用使用；应答方不做修改，直接返回*/
-  private int opaque = RequestId.getAndIncrement();
+  private int opaque;
 
 
   /*topic*/
@@ -117,6 +117,15 @@ public class RemotingCommand {
   /**提供给业务自定义扩展header data 中的{@link RemotingCommand#extFields}*/
   private transient CommandCustomHeader customHeader;
 
+  public RemotingCommand() {
+    this.opaque =  RequestId.getAndIncrement();
+  }
+
+  public RemotingCommand(boolean createOpaque) {
+    if (createOpaque) {
+      this.opaque =  RequestId.getAndIncrement();
+    }
+  }
 
 
   public ByteBuffer encode() {

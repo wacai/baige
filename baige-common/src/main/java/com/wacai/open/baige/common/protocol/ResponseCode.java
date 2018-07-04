@@ -57,6 +57,8 @@ public class ResponseCode extends RemotingSysResponseCode {
 
     public static final byte TOPIC_NOT_AUTHORIZED = 38;
 
+    public static final byte MSG_BODY_EXCEED_LIMIT = 39;
+
 
 
 

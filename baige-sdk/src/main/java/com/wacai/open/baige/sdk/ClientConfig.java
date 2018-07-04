@@ -49,6 +49,8 @@ public class ClientConfig {
 
   private int clientCallbackExecutorThreads = Runtime.getRuntime().availableProcessors();
 
+
+
   /**
    * bridge server的URL：，
    * 格式：ws://ip:port/path

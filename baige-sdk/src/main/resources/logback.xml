@@ -47,7 +47,7 @@
 
     <root>
         <level value="INFO" />
-        <appender-ref ref="DefaultAppender" />
+        <!--<appender-ref ref="DefaultAppender" />-->
     </root>
 
 

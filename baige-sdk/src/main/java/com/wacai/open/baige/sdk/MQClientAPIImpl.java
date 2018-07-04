@@ -8,6 +8,7 @@ import com.wacai.open.baige.common.protocol.header.AckMessageRequestHeader;
 import com.wacai.open.baige.common.protocol.header.AckMessageResponseHeader;
 import com.wacai.open.baige.common.protocol.header.PullMessageRequestHeader;
 import com.wacai.open.baige.common.protocol.header.PullMessageResponseHeader;
+import com.wacai.open.baige.common.protocol.header.SendMsgRequestHeader;
 import com.wacai.open.baige.common.protocol.heartbeat.HeartbeatData;
 import com.wacai.open.baige.remoting.InvokeCallback;
 import com.wacai.open.baige.remoting.RemotingClient;
@@ -27,15 +28,23 @@ import com.wacai.open.baige.sdk.exception.AckMsgException;
 import com.wacai.open.baige.sdk.exception.ClientException;
 import com.wacai.open.baige.sdk.exception.ServerException;
 import com.wacai.open.baige.sdk.processor.ClientRemotingProcessor;
+import com.wacai.open.baige.sdk.producer.SendCallback;
+import com.wacai.open.baige.sdk.producer.SendResult;
+import com.wacai.open.baige.sdk.producer.SendStatus;
+import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Future;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 发送和处理Request 都在这个类处理。
  */
 public class MQClientAPIImpl {
+
+  private static Logger LOGGER = LoggerFactory.getLogger(MQClientAPIImpl.class);
 
   private final RemotingClient remotingClient;
   private final ClientRemotingProcessor clientRemotingProcessor;
@@ -163,6 +172,68 @@ public class MQClientAPIImpl {
 
 
   }
+
+  public SendResult sendMessage(final SendMsgRequestHeader sendMsgRequestHeader, final String msgBody,
+      final long timeoutMills, final CommunicationMode communicationMode, final SendCallback sendCallback)
+      throws RemotingException, InterruptedException {
+    String topic = sendMsgRequestHeader.getTopic();
+    sendMsgRequestHeader.setTopic(null);
+    RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.PUSH_MSG, sendMsgRequestHeader, topic);
+    try {
+      request.setBody(msgBody.getBytes("UTF-8"));
+    } catch (UnsupportedEncodingException e) {
+      LOGGER.warn("encode msg body catch Exception", e);
+    }
+
+    switch (communicationMode) {
+      case ONEWAY:
+        assert false;
+        return null;
+      case ASYNC:
+        this.sendMessageAsync(request, timeoutMills, sendCallback);
+        return null;
+      case SYNC:
+        assert  false;
+        return null;
+      default:
+        assert false;
+        break;
+    }
+
+    return null;
+
+
+  }
+
+  private void sendMessageAsync(RemotingCommand request, long timeoutMills, SendCallback sendCallback)
+      throws InterruptedException, RemotingException{
+    this.remotingClient.invokeAsync(null, request, timeoutMills, new InvokeCallback() {
+      @Override
+      public void operationComplete(ResponseFuture responseFuture) {
+        RemotingCommand response = responseFuture.getResponseCommand();
+//        LOGGER.info("the opaque of send msg response is {}", response.getOpaque());
+        if (response != null) {
+          try {
+            SendResult sendResult = MQClientAPIImpl.this.processSendMsgResponse(response);
+            sendCallback.onSuccess(sendResult);
+          } catch (Exception e) {
+            sendCallback.onException(e);
+          }
+        } else {
+          if (!responseFuture.isSendReqOK()) {
+            sendCallback.onException(new ClientException("send push msg request failed", responseFuture.getCause()));
+          } else if (responseFuture.isTimeout()) {
+            sendCallback.onException(new ClientException("wait response timeout " + responseFuture.getTimeoutMills() + "ms",
+                responseFuture.getCause()));
+          } else {
+            sendCallback.onException(new ClientException("unknow reason", responseFuture.getCause()));
+          }
+        }
+      }
+    });
+  }
+
+
   /**
    *
    * @param serverAddr 如果是socket服务器地址, 则serverAddr的格式是：  ip:port
@@ -241,11 +312,39 @@ public class MQClientAPIImpl {
             pullMsgCallback.onException(new ClientException("wait response timeout " + responseFuture.getTimeoutMills() + "ms",
                 responseFuture.getCause()));
           } else {
-            pullMsgCallback.onException(new ClientException("unknow reseaon", responseFuture.getCause()));
+            pullMsgCallback.onException(new ClientException("unknow reason", responseFuture.getCause()));
           }
         }
       }
     });
+  }
+
+  private SendResult processSendMsgResponse(RemotingCommand response) throws ServerException {
+
+    SendStatus sendStatus = null;
+    switch (response.getCode()) {
+      case ResponseCode.SUCCESS:
+        sendStatus = SendStatus.OK;
+        break;
+      case ResponseCode.SYSTEM_ERROR:
+        sendStatus = SendStatus.FAILURE;
+        break;
+      case ResponseCode.TOPIC_NOT_EXIST:
+        sendStatus = SendStatus.TOPIC_NOT_EXIST;
+        break;
+      case ResponseCode.TOPIC_NOT_AUTHORIZED:
+        sendStatus = SendStatus.TOPIC_NOT_AUTHORIZED;
+        break;
+      case ResponseCode.MSG_BODY_EXCEED_LIMIT:
+        sendStatus = SendStatus.MSG_BODY_EXCEED_LIMIT;
+        break;
+      default:
+        throw new ServerException(response.getCode(), response.getRemark());
+    }
+
+    SendResult sendResult = new SendResult();
+    sendResult.setSendStatus(sendStatus);
+    return sendResult;
   }
 
   private PullResult processPullResponse(RemotingCommand response)
@@ -298,7 +397,6 @@ public class MQClientAPIImpl {
 
   public Future<Boolean> reconnect(long connectTimeoutMs) throws Exception {
     return this.remotingClient.reconnect(connectTimeoutMs);
-
   }
 
   public interface Listener {

@@ -8,6 +8,7 @@ import com.wacai.open.baige.sdk.consumer.AckMessageService;
 import com.wacai.open.baige.sdk.consumer.MQConsumerInner;
 import com.wacai.open.baige.sdk.exception.ClientException;
 import com.wacai.open.baige.sdk.processor.ClientRemotingProcessor;
+import com.wacai.open.baige.sdk.producer.MQProducerInner;
 import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -40,6 +41,8 @@ public class MQClientInstance {
   private MQConsumerInner mqConsumerInner;
   private String cosumerGroup;
 
+  private MQProducerInner mqProducerInner;
+  private String producerGroup;
 
   private List<Listener> listeners;
 
@@ -121,13 +124,11 @@ public class MQClientInstance {
   public void start() throws ClientException {
 
     synchronized (this) {
-      /*状态检查*/
-      if (clientState == ClientState.STARTED || clientState == ClientState.STARTING
-          || clientState == ClientState.CLOSING) {
-        LOGGER.warn("The MQClientInstance can't start as the clientState is  {} ", clientState);
-        throw new ClientException("The MQClientInstance can't start as the clientState is " +
-            clientState, null);
+      if (clientState == ClientState.STARTED ) {
+        //启动过无需重新启动
+        return;
       }
+      /*状态检查*/
       clientState = ClientState.STARTING;
       try {
         this.doStart();
@@ -158,6 +159,16 @@ public class MQClientInstance {
       MQClientInstanceManager.getInstance().removeMQClientInstance(clientId);
       this.clientState = ClientState.CLOSED;
     }
+  }
+
+
+  public boolean registerProducer(String producerGroup, final MQProducerInner mqProducerInner) {
+    if (null == producerGroup || mqProducerInner == null) {
+      return false;
+    }
+    this.producerGroup = producerGroup;
+    this.mqProducerInner = mqProducerInner;
+    return true;
   }
 
   public boolean registerConsumer(String consumerGroup, final MQConsumerInner consumer) {

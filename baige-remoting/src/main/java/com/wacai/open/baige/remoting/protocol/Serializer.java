@@ -154,7 +154,7 @@ public class Serializer {
 
 
   public static RemotingCommand decodeHeader(final byte []headerArray) {
-    RemotingCommand cmd = new RemotingCommand();
+    RemotingCommand cmd = new RemotingCommand(false);// 解码的时候不创建opaque.
     ByteBuffer headerBuffer = ByteBuffer.wrap(headerArray);
     cmd.setFlag(headerBuffer.getShort());
     cmd.setCode(headerBuffer.getShort());

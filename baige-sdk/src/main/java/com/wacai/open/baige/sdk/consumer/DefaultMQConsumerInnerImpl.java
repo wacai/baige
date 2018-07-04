@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.eclipse.jetty.client.HttpResponseException;
 import org.eclipse.jetty.websocket.api.UpgradeException;
 import org.slf4j.Logger;
@@ -69,6 +70,9 @@ public class DefaultMQConsumerInnerImpl implements  MQConsumerInner  {
 
 
 
+  /*是否做断链重连*/
+  private AtomicBoolean isReconnect = new AtomicBoolean(true);
+
 
 
 
@@ -81,6 +85,15 @@ public class DefaultMQConsumerInnerImpl implements  MQConsumerInner  {
     this.mqAtomConsumers = Collections.synchronizedSet(new HashSet<>());
 
     this.mqClientInstance = MQClientInstanceManager.getInstance().getMQClientInstance(this.defaultMQConsumer);
+
+
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      @Override
+      public void run() {
+        isReconnect.set(false);
+      }
+    });
+
 
 
   }
@@ -128,6 +141,11 @@ public class DefaultMQConsumerInnerImpl implements  MQConsumerInner  {
 
         @Override
         public void onClose(InetSocketAddress remoteAddr) { //和服务器的链路断链以后，先暂停各种服务， 然后尝试进行断链重连；
+          if (!isReconnect.get()) {
+            LOGGER.info(" isReconnect is set to false by jvm shutdown hook, so mqClientInstance don't need to reconnect to server");
+            return;
+          }
+
           try {
             /*暂停服务*/
             DefaultMQConsumerInnerImpl.this.suspend();

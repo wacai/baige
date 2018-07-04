@@ -221,7 +221,6 @@ public class WsSocket {
     ByteBuffer byteBuffer = remotingCommand.encode();
     Future<Void> future;
     future = session.getRemote().sendBytesByFuture(byteBuffer);
-//    session.getRemote().flush();
     return future;
 
   }

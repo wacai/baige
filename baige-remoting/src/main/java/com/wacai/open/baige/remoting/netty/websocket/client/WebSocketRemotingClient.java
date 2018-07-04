@@ -320,56 +320,10 @@ public class WebSocketRemotingClient  extends NettyRemotingAbstract implements R
           timeoutMills, invokeCallback, once);
       this.responseTable.put(request.getOpaque(), responseFuture);
       try {
-
-        /*
-        //先增加监听器
-        wsSocket.registerSocketListener(socketListener);
-
-        * */
-
         wsSocket.sendRemotingCommand(request);
-        /*  NettyRemotingClient发送请求失败的处理 */
-//        wsSocket.addListener(new RemotingCommandListener() {
-//          @Override
-//          public void onRecvCommand(RemotingCommand remotingCommand) {
-//            /*成功接收到remoting command ,可能是Request或者Resposne*/
-//            try {
-//              processMessageReceived(wsSocket, remotingCommand);
-//            } catch (Exception e) {
-//              LOGGER.warn("process command [type:{}] catch Exception",
-//                  remotingCommand.isResponseType() ? "response" : "request",
-//                  e);
-//            }
-//
-//          }
-//        });
-
-
-        /*
-        channel.writeAndFlush(request).addListener(new ChannelFutureListener() {
-          @Override
-          public void operationComplete(ChannelFuture future) throws Exception {
-            if (future.isSuccess()) {
-              responseFuture.setSendReqOK(true);
-              return;
-            } else {
-              responseFuture.setSendReqOK(false);
-            }
-            responseFuture.putResponse(null);
-            responseTable.remove(request.getOpaque());
-            try {
-              responseFuture.executeInvokeCallback();
-            } catch (Throwable e) {
-              LOGGER.warn("excute callback in writeAndFlush addListener, and callback throw", e);
-            } finally {
-              responseFuture.release();
-            }
-
-            LOGGER.warn("send a request command to wsURI <{}> failed.", wsURI);
-            LOGGER.warn(request.toString());
-          }
-        });*/
+        responseFuture.setSendReqOK(true);
       } catch (Exception e) {
+        responseFuture.setSendReqOK(false);
         responseFuture.release();
         LOGGER.warn(
             "send a request command to wsURI:  <" + this.wsURI
@@ -485,7 +439,6 @@ public class WebSocketRemotingClient  extends NettyRemotingAbstract implements R
 
 //    wsSocket.registerSocketListener(socketListener);
 
-
     Future<Session> future = this.webSocketClient.connect(this.wsSocket, uri, clientUpgradeRequest);
     Session session = future.get(connectTimeoutMs, TimeUnit.MILLISECONDS);
     if (session != null && session.isOpen()) {
@@ -587,10 +540,10 @@ public class WebSocketRemotingClient  extends NettyRemotingAbstract implements R
         @Override
         public void run() {
           if (!isSuspendScheduleTask) {
-//            WebSocketRemotingClient.this.scanResponseTable();
+            WebSocketRemotingClient.this.scanResponseTable();
           }
         }
-      }, 3000, 1000, TimeUnit.MILLISECONDS);
+      }, 3000, 2000, TimeUnit.MILLISECONDS);
     }
 
 

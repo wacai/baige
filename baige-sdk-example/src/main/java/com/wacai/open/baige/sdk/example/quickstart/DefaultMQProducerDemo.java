@@ -11,6 +11,7 @@ import com.wacai.open.baige.sdk.exception.ClientException;
 import com.wacai.open.baige.sdk.producer.DefaultMQProducer;
 import com.wacai.open.baige.sdk.producer.SendCallback;
 import com.wacai.open.baige.sdk.producer.SendResult;
+import com.wacai.open.baige.sdk.producer.SendStatus;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -83,11 +84,16 @@ public class DefaultMQProducerDemo {
             new SendCallback() {
               @Override
               public void onSuccess(SendResult sendResult) {
-                System.out.println(sendResult.getSendStatus());
+                if (SendStatus.OK == sendResult.getSendStatus()) {
+                  //消息发送成功
+                } else {
+                  //消息发送失败
+                }
               }
 
               @Override
               public void onException(Throwable t) {
+                //消息发送失败，通过t.getMessage() 打印具体异常信息（业务可以不关心）
                 System.out.println(t.getMessage());
               }
             }, 3000);

@@ -1,0 +1,12 @@
+.idea/
+target/
+baige.iml
+baige-sdk-example/target/
+baige-sdk-example/baige-sdk-example.iml
+baige-common/target/
+baige-common/baige-common.iml
+baige-remoting/target/
+baige-remoting/baige-remoting.iml
+baige-sdk/target/
+baige-sdk/baige-sdk.iml
+
